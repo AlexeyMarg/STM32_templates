@@ -52,6 +52,7 @@ void InitFreq(void)
 	RCC->CFGR |= 0b10<<RCC_CFGR_SW_Pos;
 }
 
+// Turn on LED to indicate start
 void CheckLed(void)
 {
 	// Enable GPIOC on bus AHB1
@@ -62,9 +63,26 @@ void CheckLed(void)
 	GPIOC->ODR |=(1<<8);
 }
 
+void InitUsart(void)
+{
+	// Enable USART2 on bus APB1
+	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
+	// Enable pins of USART2 on GPIOA
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+	// Choose pins alternate function mode
+	GPIOA->MODER|= 0b10<<2*2 | 0b10<<3*2;
+	// Choose USART2 alternate function
+	GPIOA->AFR[0] |= 0b0111<<2*4 | 0b0111<<3*4;
+	// Choose USART2 baudrate
+	USART2->BRR = APB1_FREQ/BAUDRATE;
+	// Usart, transmitter, receiver and interrupts for them enable
+	USART2->CR1 = USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
+}
+
 int main(void)
 {
 	InitFreq();
 	CheckLed();
+	InitUsart();
 	while (1);
 }
