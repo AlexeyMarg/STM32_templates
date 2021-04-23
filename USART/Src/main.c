@@ -63,6 +63,23 @@ void CheckLed(void)
 	GPIOC->ODR |=(1<<8);
 }
 
+// Interrupt handler
+void USART2_IRQHandler(void)
+{
+	uint8_t data;
+	// if data received
+	if (USART2->SR & (USART_SR_RXNE))
+		// read data
+		data = USART2->DR;
+	if (data < 255)
+	{
+		data+=1;
+		// send modified data
+		USART2->DR = data;
+	}
+	else USART2->DR = data;
+}
+
 void InitUsart(void)
 {
 	// Enable USART2 on bus APB1
@@ -84,5 +101,8 @@ int main(void)
 	InitFreq();
 	CheckLed();
 	InitUsart();
+
+	// enable interrupt handler for USART2
+	NVIC_EnableIRQ(USART2_IRQn);
 	while (1);
 }
