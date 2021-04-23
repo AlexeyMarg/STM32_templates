@@ -10,4 +10,8 @@ Digital read and write GPIO ports with LEDs and buttons via registers and bit-ba
 
 ## frequencies_configuration
 Microcontroller frequencies configuration and LED blink with use of system timer interrupt.
+
+## USART
+
+Read and write data vi USART
  
