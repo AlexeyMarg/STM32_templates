@@ -36,7 +36,7 @@ typedef struct
 int main(void)
 {
 	*((uint32_t *) 0x40023830) |= 1 | 4;
-	uint32_t r_led, b_led, i, counter=0;
+	uint32_t i, counter=0;
 
 	GPIOC->MODER |= 1 << 8*2 | 1 << 9*2;
 
