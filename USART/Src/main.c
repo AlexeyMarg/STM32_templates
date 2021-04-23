@@ -52,8 +52,19 @@ void InitFreq(void)
 	RCC->CFGR |= 0b10<<RCC_CFGR_SW_Pos;
 }
 
+void CheckLed(void)
+{
+	// Enable GPIOC on bus AHB1
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+	// Output mode for GPIOC8
+	GPIOC->MODER |= 1 << 8*2;
+	// Set 1 on GPIOC8
+	GPIOC->ODR |=(1<<8);
+}
+
 int main(void)
 {
 	InitFreq();
+	CheckLed();
 	while (1);
 }
