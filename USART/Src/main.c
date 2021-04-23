@@ -86,7 +86,7 @@ void InitUsart(void)
 	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 	// Enable pins of USART2 on GPIOA
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-	// Choose pins alternate function mode
+	// Choose pins GPIOA2,3 alternate function mode
 	GPIOA->MODER|= 0b10<<2*2 | 0b10<<3*2;
 	// Choose USART2 alternate function
 	GPIOA->AFR[0] |= 0b0111<<2*4 | 0b0111<<3*4;
