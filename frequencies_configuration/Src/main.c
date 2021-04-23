@@ -16,6 +16,23 @@
 #define PLLN 100 // 50-432 integers
 #define PLLP 0b00 // 00 - 2, 01 - 3, 10 - 6, 11 - 8
 
+// interrupt for each overflow of system timer
+void SysTick_Handler(void)
+{
+	static uint32_t i=0;
+	i++;
+	if (i<=2500)
+		{
+		GPIOC->ODR &=~(1<<9);
+		}
+	else if (i<5000)
+		{
+		GPIOC->ODR |=(1<<9);
+		}
+	else
+		i=0;
+}
+
 
 int main(void)
 {
@@ -57,10 +74,13 @@ int main(void)
 	// SWS - status of chosen mode
 	RCC->CFGR |= 0b10<<RCC_CFGR_SW_Pos;
 
+	//Enable interrupt for system timer overflow
+	SysTick_Config(Systicks_Prescaler);
+
 	// On GPIOC on bus AHB1
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
 	// Output mode for GPIOC8
-	GPIOC->MODER |= 1 << 8*2;
+	GPIOC->MODER |= 1 << 8*2 | 1<< 9*2;
 	// Set 1 on GPIOC8
 	GPIOC->ODR |=(1<<8);
 	while (1);
